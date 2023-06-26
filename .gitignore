@@ -1,0 +1,6 @@
+target.json
+creds.json
+text/feedback.txt
+text/pull_comments.txt
+text/summary.txt
+__pycache__
