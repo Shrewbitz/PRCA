@@ -7,7 +7,7 @@ def fetchComments():
     REPO_OWNER = target['github_repo']
     REPO_NAME = target['github_repo_owner']
     USER = target['github_user']
-    OUTPUT_FILE = 'text/pull_comments.txt'
+    OUTPUT_FILE = '1_pull_comments.txt'
     TOKEN=credentials['github_oauth_token']
 
 
@@ -15,7 +15,7 @@ def fetchComments():
     headers = {'Authorization': f'token {TOKEN}'}
 
     try:
-        with open('text/pull_comments.txt', 'w') as file:
+        with open(OUTPUT_FILE, 'w') as file:
             file.write('')
     except Exception as e:
         print(f"Error cleaning cleanup document: {e}")

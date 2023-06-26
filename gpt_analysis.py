@@ -5,17 +5,16 @@ from setup import load_credentials
 credentials = load_credentials()
 openai.api_key = credentials['openai_secret_key']
 
-
 def analyze_github_comments():
     try:
-        with open('text/pull_comments.txt', 'r') as file:
+        with open('1_pull_comments.txt', 'r') as file:
             allComments = file.read().replace('\n', ' ')
         comments = chunk_text_by_words(allComments)    
     except Exception as e:
         print(f"Error reading comments: {e}")
         exit(1)
     try:
-        with open('text/feedback.txt', 'w') as file:
+        with open('2_feedback.txt', 'w') as file:
             file.write('')
     except Exception as e:
         print(f"Error cleaning cleanup document: {e}")
@@ -44,10 +43,10 @@ def analyze_github_comments():
     try:
         for outputChunk in output:
             if outputChunk is not None:
-                with open('text/feedback.txt', 'a') as file:
+                with open('2_feedback.txt', 'a') as file:
                     file.write(outputChunk+ '\n')
     except Exception as e:
-        print(f"Error writing feedback.txt: {e}")
+        print(f"Error writing 2_feedback.txt: {e}")
         exit(1)
     return
 
@@ -55,7 +54,7 @@ def analyze_github_comments():
 
 def summarize_feedback():
     try:
-        with open('text/feedback.txt', 'r') as file:
+        with open('2_feedback.txt', 'r') as file:
                 feedback_content = file.read().replace('\n', ' ')
                 feedback_array = chunk_text_by_words(feedback_content)
     except Exception as e:
@@ -83,10 +82,10 @@ def summarize_feedback():
         exit(1)
 
     try:
-        with open('text/summary.txt', 'w') as file:
+        with open('3_summary.txt', 'w') as file:
             file.write(response['choices'][0]['message']['content'] + '\n')
     except Exception as e:
-        print(f"Error writing summary.txt: {e}")
+        print(f"Error writing 3_summary.txt: {e}")
         exit(1)
     print('complete')
     return
