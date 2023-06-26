@@ -29,6 +29,6 @@ This program will look through pull requests made by a user, it will collect com
 - Finally it will send the feedback to gpt3.5 to be summarized. 
 - All of these text files are available to look at.
 
-nextgoal1 - figure out how to analyze feedback without losing context of batching
-nextgoal2 - let it prompt you for multiple repos
-nextgoal3 - is to use python server / website 
+1. nextgoal - figure out how to analyze feedback without losing context of batching
+2. nextgoal - let it prompt you for multiple repos
+3. nextgoal - is to use python server / website 
