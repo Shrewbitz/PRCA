@@ -29,9 +29,7 @@ def analyze_repo():
   
     target = target_setup(data['github_user'], data['github_repo'])
 
-    # print(target)
     comments = fetchComments(credentials, target)
-    # print(comments)
     feedback = analyze_github_comments(credentials, comments)
     summary = summarize_feedback(credentials, feedback)
     
