@@ -1,24 +1,7 @@
 import openai
-from setup import load_credentials
 
-
-credentials = load_credentials()
-openai.api_key = credentials['openai_secret_key']
-
-def analyze_github_comments():
-    try:
-        with open('1_pull_comments.txt', 'r') as file:
-            allComments = file.read().replace('\n', ' ')
-        comments = chunk_text_by_words(allComments)    
-    except Exception as e:
-        print(f"Error reading comments: {e}")
-        exit(1)
-    try:
-        with open('2_feedback.txt', 'w') as file:
-            file.write('')
-    except Exception as e:
-        print(f"Error cleaning cleanup document: {e}")
-        exit(1)
+def analyze_github_comments(credentials, comments):
+    openai.api_key = credentials['openai_secret_key']
     print('analyzing comments')
     output = []
     for comment_chunk in comments:
@@ -37,31 +20,15 @@ def analyze_github_comments():
                 model="gpt-3.5-turbo",
                 messages=conversation
             )
-            output.append(response['choices'][0]['message']['content'] + '\n')
+            output.append(response['choices'][0]['message']['content'])
         except Exception as e:
             print(f"Error processing comments: {e}")
-    try:
-        for outputChunk in output:
-            if outputChunk is not None:
-                with open('2_feedback.txt', 'a') as file:
-                    file.write(outputChunk+ '\n')
-    except Exception as e:
-        print(f"Error writing 2_feedback.txt: {e}")
-        exit(1)
-    return
+    return "\n".join(output)
 
-
-
-def summarize_feedback():
-    try:
-        with open('2_feedback.txt', 'r') as file:
-                feedback_content = file.read().replace('\n', ' ')
-                feedback_array = chunk_text_by_words(feedback_content)
-    except Exception as e:
-        print(f"Error reading comments: {e}")
-        exit(1)
+def summarize_feedback(credentials, feedback):
+    openai.api_key = credentials['openai_secret_key']
+    feedback_array = chunk_text_by_words(feedback)
     print('summarizing feedback')
-
     conversation = [
     {
         "role": "system",
@@ -80,17 +47,8 @@ def summarize_feedback():
     except Exception as e:
         print(f"Error summarizing feedback: {e}")
         exit(1)
-
-    try:
-        with open('3_summary.txt', 'w') as file:
-            file.write(response['choices'][0]['message']['content'] + '\n')
-    except Exception as e:
-        print(f"Error writing 3_summary.txt: {e}")
-        exit(1)
-    print('complete')
-    return
-
-
+    summary = response['choices'][0]['message']['content']
+    return summary
 
 def chunk_text_by_words(text, max_words=500):
     words = text.split(' ')

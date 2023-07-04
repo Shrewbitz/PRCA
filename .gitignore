@@ -1,6 +1,2 @@
-target.json
-creds.json
-1_pull_comments.txt
-2_feedback.txt
-3_summary.txt
 __pycache__
+.env
