@@ -4,6 +4,7 @@ def analyze_github_comments(credentials, comments):
     openai.api_key = credentials['openai_secret_key']
     print('analyzing comments')
     output = []
+    print(comments)
     for comment_chunk in comments:
         conversation = [
             {
@@ -23,7 +24,7 @@ def analyze_github_comments(credentials, comments):
             output.append(response['choices'][0]['message']['content'])
         except Exception as e:
             print(f"Error processing comments: {e}")
-    return "\n".join(output)
+    return " \n ".join(output)
 
 def summarize_feedback(credentials, feedback):
     openai.api_key = credentials['openai_secret_key']

@@ -19,7 +19,6 @@ def analyze_repo():
     password = os.getenv('PRCA_PASSWORD')
     github_oauth_token = os.getenv('GITHUB_OAUTH_TOKEN')
     openai_secret_key = os.getenv('OPENAI_SECRET_KEY')
-    
     if data['password'] != password:
         return jsonify("Incorrect Credentials"), 401
 

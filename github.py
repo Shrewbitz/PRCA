@@ -12,7 +12,7 @@ def fetchComments(credentials, target):
     page = 0
     print("fetching comments")
     # How many pages of pr's we look at.
-    while(page<5):
+    while(page<7):
         try:
             pulls_response = requests.get(pulls_url + f'&page={page}', headers=headers)
         except Exception as e:
@@ -22,6 +22,7 @@ def fetchComments(credentials, target):
             pull_requests = pulls_response.json()
             if not pull_requests:
                 break       
+            comment_arr = []
             for pr in pull_requests:
                     
                 if pr['user']['login'] != USER:
@@ -30,15 +31,13 @@ def fetchComments(credentials, target):
                 comments_response = requests.get(comments_url, headers=headers)
                 if comments_response.status_code == 200:
                     comments = comments_response.json()
-                    comment_arr = []
                     for comment in comments:
                         if comment['user']['login'] == pr['user']['login']:
                             continue
                         comment_arr.append(comment['body'])
-                    return "\n".join(comment_arr)
                 else:
                     print(f"Failed to fetch comments for pull request {pr['number']}: {comments_response.status_code}")
-                        
+            return comment_arr       
         else:
             print(f"Failed to fetch pull requests: {pulls_response.status_code}")
             print(pulls_response.content)
