@@ -3,9 +3,10 @@ from setup import target_setup
 from github import fetchComments
 from gpt_analysis import analyze_github_comments, summarize_feedback
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 
 app = Flask(__name__)
-
+CORS(app)
 @app.route('/')
 def home():
     return 'Welcome to PRCA!'
