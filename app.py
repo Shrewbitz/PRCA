@@ -16,12 +16,11 @@ def home():
 def analyze_repo():
     data = request.get_json(force=True)
 
-    user = os.getenv('PRCA_USERNAME')
     password = os.getenv('PRCA_PASSWORD')
     github_oauth_token = os.getenv('GITHUB_OAUTH_TOKEN')
     openai_secret_key = os.getenv('OPENAI_SECRET_KEY')
     
-    if data['user'] != user or data['password'] != password:
+    if data['password'] != password:
         return jsonify("Incorrect Credentials"), 401
 
     credentials = {
