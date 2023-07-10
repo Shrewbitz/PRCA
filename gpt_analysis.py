@@ -4,6 +4,7 @@ def analyze_github_comments(credentials, comments):
     openai.api_key = credentials['openai_secret_key']
     print('analyzing comments')
     output = []
+    print(comments)
     for comment_chunk in comments:
         conversation = [
             {

@@ -12,7 +12,7 @@ def fetchComments(credentials, target):
     page = 0
     print("fetching comments")
     # How many pages of pr's we look at.
-    while(page<7):
+    while(page<3):
         try:
             pulls_response = requests.get(pulls_url + f'&page={page}', headers=headers)
         except Exception as e:

@@ -4,6 +4,15 @@ from github import fetchComments
 from gpt_analysis import analyze_github_comments, summarize_feedback
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+from redis import Redis
+from rq import Queue
+
+redis_url = os.getenv('REDIS_URL', 'redis://localhost:6379')
+
+# redis_url = os.getenv('REDIS_URL', 'redis://')
+redis_conn = Redis.from_url(redis_url)
+q = Queue(connection=redis_conn)
+
 
 app = Flask(__name__)
 CORS(app)
@@ -11,8 +20,13 @@ CORS(app)
 def home():
     return 'Welcome to PRCA!'
 
-@app.route('/analyze', methods=['POST'])
+def analyze(credentials, target):
+    comments = fetchComments(credentials, target)
+    feedback = analyze_github_comments(credentials, comments)
+    summary = summarize_feedback(credentials, feedback)
+    return summary
 
+@app.route('/analyze', methods=['POST'])
 def analyze_repo():
     data = request.get_json(force=True)
 
@@ -29,11 +43,21 @@ def analyze_repo():
   
     target = target_setup(data['github_user'], data['github_repo'])
 
-    comments = fetchComments(credentials, target)
-    feedback = analyze_github_comments(credentials, comments)
-    summary = summarize_feedback(credentials, feedback)
+    job = q.enqueue(analyze, credentials, target)
     
-    return jsonify(summary), 200
+    return jsonify({"job_id": job.get_id()}), 202
+
+# use single quotes
+@app.route("/results/<job_key>", methods=['GET'])
+def get_results(job_key):
+    try:
+        job = q.fetch_job(job_key)
+        if job.is_finished:
+            return jsonify(job.result), 200
+        else: 
+            return "Job in progress", 202
+    except:
+        return "No such job", 404
 
 if __name__ == "__main__":
     app.run(debug=True)
