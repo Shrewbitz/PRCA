@@ -21,8 +21,11 @@ def home():
     return 'Welcome to PRCA!'
 
 def analyze(credentials, target):
+    print("fetching comments")
     comments = fetchComments(credentials, target)
+    print("analyzing github comments")
     feedback = analyze_github_comments(credentials, comments)
+    print("summarizing feedback")
     summary = summarize_feedback(credentials, feedback)
     return summary
 
