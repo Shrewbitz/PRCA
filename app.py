@@ -48,7 +48,8 @@ def analyze_repo():
     }
   
     target = target_setup(data['github_user'], data['github_repo'])
-
+    logging.debug("made it to enqueue")
+    print("print enqueue")
     job = q.enqueue(analyze, credentials, target)
     
     return jsonify({"job_id": job.get_id()}), 202
