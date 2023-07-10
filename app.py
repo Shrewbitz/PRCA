@@ -6,10 +6,13 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 from redis import Redis
 from rq import Queue
+import logging
 
-redis_url = os.getenv('REDIS_URL', 'redis://localhost:6379')
+logging.basicConfig(level=logging.DEBUG)
 
-# redis_url = os.getenv('REDIS_URL', 'redis://')
+# redis_url = os.getenv('REDIS_URL', 'redis://localhost:6379')
+
+redis_url = os.getenv('REDIS_URL', 'redis://')
 redis_conn = Redis.from_url(redis_url)
 q = Queue(connection=redis_conn)
 
@@ -21,11 +24,11 @@ def home():
     return 'Welcome to PRCA!'
 
 def analyze(credentials, target):
-    print("fetching comments")
+    logging.debug("fetching comments")
     comments = fetchComments(credentials, target)
-    print("analyzing github comments")
+    logging.debug("analyzing github comments")
     feedback = analyze_github_comments(credentials, comments)
-    print("summarizing feedback")
+    logging.debug("summarizing feedback")
     summary = summarize_feedback(credentials, feedback)
     return summary
 
